@@ -1,0 +1,17 @@
+Package: NLoN
+Type: Package
+Title: Natural Language or Not
+Version: 0.1.0
+Date: 2018-03-08
+Author: Mika Mäntylä <mika.mantyla@oulu.fi>, Fabio Calefato
+  <fabio.calefato@uniba.it>, Maëlick Claes <himself@maelick.net>
+Maintainer: Maëlick Claes <himself@maelick.net>
+Description: Identify whether text lines are natural language or not
+  using machine learning.
+Depends: data.table, R (>= 3.0)
+Imports: text2vec, tokenizers, glmnet, Matrix, modules, stats
+License: GPL-3
+Encoding: UTF-8
+Remotes: M3SOulu/NLoN
+Suggests: testthat, plyr
+RoxygenNote: 6.0.1

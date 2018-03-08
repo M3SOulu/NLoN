@@ -1,0 +1,20 @@
+citHeader("To cite NLoN in publications use:")
+
+citEntry(entry = "Article",
+         title = "Natural Language or Not (NLoN) - A Package for Software Engineering Text Analysis Pipeline",
+         author       = personList(as.person("Mikä Mäntylä"),
+                                   as.person("Fabio Calefato"),
+                                   as.person("Maëlick Claes")),
+         journal      = "MSR",
+         year         = "2018",
+         volume       = "",
+         number       = "",
+         pages        = "",
+         url          = "http://TODO",
+
+         textVersion  =
+         paste("Mikä Mäntylä, Fabio Calefato, Maëlick Claes (2018).",
+               "Natural Language or Not (NLoN) - A Package for",
+               "Software Engineering Text Analysis Pipeline.",
+               "MSR",
+               "URL http://TODO"))
