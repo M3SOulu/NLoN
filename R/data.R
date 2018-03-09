@@ -11,7 +11,7 @@
 #'   \item{rater1}{reponse from the first rater.}
 #'   \item{rater2}{reponse from the second rater.}
 #' }
-#' @source \url{https://bugzilla.mozilla.org/}
-#' \url{http://www.kubertenes/}
-#' \url{http://lucene}
+#' @source \url{https://bugzilla.mozilla.org}
+#' \url{http://kubernetes.slackarchive.io/kubernetes-dev}
+#' \url{http://mail-archives.apache.org/mod_mbox/lucene-dev}
 "nlon.data"
