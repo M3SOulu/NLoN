@@ -2,7 +2,6 @@
 
 export(Character3Grams)
 export(FeatureExtraction)
-export(NLoN)
 export(NLoNModel)
 export(NLoNPredict)
 export(TriGramsAndFeatures)

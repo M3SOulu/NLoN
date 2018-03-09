@@ -10,15 +10,14 @@
 #' data(nlon.data)
 #'
 #' ## Build a model with glmnet
-#' model <- with(nlon.data, NLoNModel(text, rater2))
+#' model <- with(head(nlon.data, 100), NLoNModel(text, rater2))
+#' \dontrun{model <- nlon.data[source == "mozilla", NLoNModel(text, rater2)]}
 #'
-#' ## Use the model to preidct new data.
+#' ## Use the model to predict new data.
 #' topredict <- c("This is natural language.", "not(natural, language);")
-#' NLoNPredict(model, topredict, 0.1)
+#' NLoNPredict(model, topredict)
 #'
-#' ## Train and predict in a single function call.
-#' NLoN(rbind(nlon.data[, list(text, response=rater2)],
-#'           list(text=topredict), fill=TRUE), 0.1)
+#' \dontrun{NLoNPredict(model, nlon.data[source != "mozilla", text])}
 #'
 #' @docType package
 #' @name NLoN
