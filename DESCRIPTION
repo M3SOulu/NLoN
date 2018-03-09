@@ -10,6 +10,7 @@ Description: Identify whether text lines are natural language or not
   using machine learning.
 Depends: data.table, R (>= 3.0)
 Imports: text2vec, tokenizers, glmnet, Matrix, modules, stats, caret
+LazyData: true
 License: GPL-3
 Encoding: UTF-8
 Remotes: M3SOulu/NLoN

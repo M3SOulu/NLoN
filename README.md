@@ -21,7 +21,6 @@ With devtools:
 ## Example Usage
 
     library(NLoN)
-    data(nlon.data)
     model <- NLoNModel(nlon.data$text, nlon.data$rater2) 
 
     topredict <- c("This is natural language.", "public void NotNaturalLanguageFunction(int i, String s)")

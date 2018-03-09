@@ -7,7 +7,7 @@
 #' @examples
 #'
 #' ## Training data provided in the package.
-#' data(nlon.data)
+#' nlon.data
 #'
 #' ## Build a model with glmnet
 #' model <- with(head(nlon.data, 100), NLoNModel(text, rater2))
