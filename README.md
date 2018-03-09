@@ -1,5 +1,5 @@
 [![Travis-CI Build Status](https://travis-ci.org/M3SOulu/NLoN.svg?branch=master)](https://travis-ci.org/M3SOulu/NLoN)
-<!-- [![Coverage Status](https://img.shields.io/codecov/c/github/M3SOulu/NLoN/master.svg)](https://codecov.io/github/M3SOulu/NLoN?branch=master) -->
+[![Coverage Status](https://img.shields.io/codecov/c/github/M3SOulu/NLoN/master.svg)](https://codecov.io/github/M3SOulu/NLoN?branch=master)
 <!-- [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/NLoN)](https://cran.r-project.org/package=NLoN) -->
 
 # NLoN - Natural Language or Not
