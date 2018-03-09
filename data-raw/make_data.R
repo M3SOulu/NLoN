@@ -2,7 +2,7 @@ library(devtools)
 library(data.table)
 
 filenames <- c(mozilla="data-raw/lines.10k.cfo.sample.2000 - Mozilla (Firefox, Core, OS).csv",
-               kubertenes="data-raw/lines.10k.cfo.sample.2000 - Kubernetes (Slackarchive.io).csv",
+               kubernetes="data-raw/lines.10k.cfo.sample.2000 - Kubernetes (Slackarchive.io).csv",
                lucene="data-raw/lines.10k.cfo.sample.2000 - Lucene-dev mailing list.csv")
 
 MakeFactor <- function(ratings) factor(ratings, labels=c("NL", "Not"))
