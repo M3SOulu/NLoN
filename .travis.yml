@@ -9,7 +9,7 @@ r_packages: devtools
 r_github_packages:
   - r-lib/covr
 
-install:
+before_script:
   - Rscript -e 'devtools::document()'
 
 after_success:
