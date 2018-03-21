@@ -25,3 +25,8 @@ With devtools:
 
     topredict <- c("This is natural language.", "public void NotNaturalLanguageFunction(int i, String s)")
     NLoNPredict(model, topredict) 
+
+## Paper and Citation
+If you use our tool please cite our paper: 
+Mäntylä M. V., Calefato F., Claes M, "Natural Language or Not (NLoN) - A Package for Software Engineering Text Analysis Pipeline", The 15th International Conference on Mining Software Repositories (MSR 2018), May 28--29, 2017, Gothenburg, Sweden, pp. 1-5 
+http://mikamantyla.eu/2018_Mantyla_MSR_natural-language-nlon.pdf
