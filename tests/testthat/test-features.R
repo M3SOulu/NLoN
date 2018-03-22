@@ -103,9 +103,9 @@ test_that("FeatureExtraction works", {
 test_that("Character3Grams works", {
   text <- c("", "abcd", "1234", "!@#$", "1234abcd")
   res <- Character3Grams(text)
-  expect_equal(dim(res), c(5, 7))
+  expect_equal(dim(res), c(5, 8))
   expect_equal(colnames(res),
-               c("0ab", "@#$", "00a", "!@#", "bcd", "abc", "000"))
+               c("0ab", "NA", "@#$", "00a", "!@#", "bcd", "abc", "000"))
 })
 
 test_that("ConvertFeatures works", {
