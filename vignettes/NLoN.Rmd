@@ -1,0 +1,256 @@
+---
+title: "NLoN - Natural Language or Not"
+author: "Maëlick Claes"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{NLoN - Natural Language or Not}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This vignette presents how one can train a model with NLoN and use to
+predict whether lines of text are natural language or not. It also
+shows how to use a different training dataset than the one provided in
+this package, and how to evaluate its performance.
+
+## Data preparation
+
+This paper includes the training dataset that was used in our MSR paper
+"Natural Language or Not (NLoN) - A Package for Software Engineering
+Text Analysis Pipeline". The dataset is presented as a *data.table*
+object with different columns:
+
+* *source* is a character string containing the source of the line of
+  text (*mozilla*, *kubernetes*, and *lucene*).
+* text is a character string containing the line of text
+* rater1 and rater2 are the factor (with levels *NL* for natural
+  language and *Not* for anything else than natural language) with the
+  manual labeling of the data done by two different persons.
+
+```{r}
+library(data.table)
+library(NLoN)
+
+nlon.data
+```
+
+However, in order to train a model, only a vector with the text and a
+vector (of the same length) with the factor response are needed. A
+source vector was added in order to identify where does each line of
+text provided in the package come from.
+
+## Computing features
+
+Before training a model, it is necessary to build features that will
+be used by *glmnet*. Various functions are defined in the module
+*NLoN::features* to compute individual features. For example
+
+```{r}
+text <- c("This is some text.", "This contains 1 number.", "123")
+NLoN::features$Numbers(text)
+```
+
+The package also includes three other functions computing multiple
+features at the same time. *NLoN::FeatureExtraction* computes the set
+of simple text features that were used in the NLoN MSR paper and were
+inspired by regular expression matching. *NLoN::Character3Grams*
+returns a document term sparse matrix with the character tri-grams
+contained the the various lines of text. Finally
+*NLoN::TriGramsAndFeatures* returns a matrix with both the two other
+functions.
+
+## Training a model
+
+A model can be trained using *NLoN::NLoNModel*. A model can simply be
+trained by providing the text and expected response (a factor with
+levels *NL* and *Not*).
+
+```{r, message='hide', fig.width=7, fig.height=4}
+model <- NLoN::NLoNModel(nlon.data$text, nlon.data$rater2)
+plot(model)
+```
+
+By default features will be computed using *NLoN::TriGramsAndFeatures*
+and a 10-fold cross validation. Several optional arguments allow to
+customize the model.
+
+A different feature function can be specified using the *features*
+argument. The function must return either a matrix, a data.frame with
+numerical values or a list of numerical vectors of the same
+length. Alternatively, features can also be a list of functions
+returning individual numeric vectors.
+
+The cross validation can also be customized. By default it uses *glmnet*
+as it is faster, but *caret* can also be used to run a repeated
+10-fold cross validation. This is done by changing the *cv* to
+*"caret"*. The number of repeats is 10 by default but can be changed
+with the parameter *repeats*. (Note that cross validation with *caret*
+is significantly slower than with *glmnet*.) Finally if a value different than
+*"caret"* or *"glmnet"* is passed to *cv*, then no cross validation is
+used and a single model is trained on the whole dataset.
+
+For example we can build a model without using character tri-grams:
+
+```{r, fig.width=7, fig.height=4}
+model2 <- NLoN::NLoNModel(nlon.data$text, nlon.data$rater2,
+                          features=FeatureExtraction)
+plot(model2)
+```
+
+Or build one using only the ratio of uppercase letters, numbers
+and special characters and a cross-validation repeated 5 times:
+
+```{r, fig.width=7, fig.height=4}
+features <- list(caps.ratio=NLoN::features$CapsRatio,
+                 numbers.ratio=NLoN::features$NumbersRatio,
+                 special.ratio=NLoN::features$SpecialCharsRatio)
+system.time(model3 <- NLoN::NLoNModel(nlon.data$text, nlon.data$rater2,
+                                      features=features, cv="caret", repeats=5,
+                                      verbose=FALSE))
+plot(model3)
+```
+
+## Making predictions
+
+Once a model has been built, *NLoN::NLoNPredict* can be used to make
+predictions. The function requires an object as returned by
+*NLoN::NLoNModel* and a character vector containing the text on which
+make the predictions:
+
+```{r}
+text <- c("This is natural language.", "not(natural, language);")
+NLoN::NLoNPredict(model, text)
+```
+
+By default the prediction is done using *NLoN::TriGramsAndFeatures*,
+but if the model was trained differently, the feature function must
+also be passed to *NLoN::NLoNPredict*:
+
+```{r}
+NLoN::NLoNPredict(model, text, features=FeatureExtraction)
+```
+
+By default the prediction is done at minimum lambda (*lambda.min*),
+but it can also be done at *lambda.1se* which gives the most
+regularized (penalized) model such that AUC is within one standard
+deviation of the maximum. Note that *lambda.min* is only available for
+cross validated models (either trained with *caret* or *glmnet*) and
+*lambda.1se* for cross validated models trained with *glmnet*.
+
+If no cross validation was done before, lambda needs to be specified
+manually. Not performing cross validation can be a way to save time
+when training the model. Repeated cross validation (with *caret*) can be
+particularly slow. Thus it can be a good idea to run the cross
+validation only the first time, save the value of *lambda.min* and
+train the model without cross validation for future use.
+
+For example we trained a full model with a 10 repeated 10 fold cross
+validation, which takes 1850 seconds to complete. We obtained a
+*lambda.min* value of 0.003448735. We can now train a model on the
+full training set in a very short time and directly used the lambda
+value previously obtained with cross validation:
+
+```{r}
+lambda.min <- 0.003784982
+system.time(model4 <- NLoN::NLoNModel(nlon.data$text, nlon.data$rater2,
+                                      cv="none"))
+NLoN::NLoNPredict(model4, text, lambda=lambda.min)
+```
+
+## Evaluating models
+
+### All sources
+
+The first model trained on all sources with cross validation using
+both 3-grams and feature engineering has the following AUC at
+*lambda.min*:
+
+```{r}
+with(model, cvm[lambda == lambda.min])
+```
+
+And the following AUC at *lambda.1se*:
+
+```{r}
+with(model, cvm[lambda == lambda.1se])
+```
+
+### Within-source prediction
+
+Here we train one model for each source.
+
+### Mozilla
+
+```{r, fig.width=7, fig.height=4}
+comments.model <- NLoN::NLoNModel(nlon.data[source == "mozilla", text],
+                                  nlon.data[source == "mozilla", rater2])
+plot(comments.model)
+with(comments.model, cvm[lambda == lambda.min])
+with(comments.model, cvm[lambda == lambda.1se])
+```
+
+### Lucene
+
+```{r, fig.width=7, fig.height=4}
+emails.model <- NLoN::NLoNModel(nlon.data[source == "mozilla", text],
+                                  nlon.data[source == "mozilla", rater2])
+plot(emails.model)
+with(emails.model, cvm[lambda == lambda.min])
+with(emails.model, cvm[lambda == lambda.1se])
+```
+
+### Kubernetes
+
+```{r, fig.width=7, fig.height=4}
+chats.model <- NLoN::NLoNModel(nlon.data[source == "mozilla", text],
+                                  nlon.data[source == "mozilla", rater2])
+plot(chats.model)
+with(chats.model, cvm[lambda == lambda.min])
+with(chats.model, cvm[lambda == lambda.1se])
+```
+
+### Cross-source prediction
+
+Here we test how well a single source can be predicted using the two
+other data sources to train a model.
+
+```{r}
+mozilla.train <- nlon.data[source != "mozilla"]
+mozilla.test <- nlon.data[source == "mozilla"]
+mozilla.model <- NLoN::NLoNModel(mozilla.train$text, mozilla.train$rater2)
+mozilla.resp <- NLoN::NLoNPredict(mozilla.model, mozilla.test$text,
+                                  type="response")
+mozilla.predict <- NLoN::NLoNPredict(mozilla.model, mozilla.test$text)
+ModelMetrics::auc(mozilla.test$rater2, mozilla.resp)
+table(mozilla.predict, mozilla.test$rater2)
+```
+
+```{r}
+kubernetes.train <- nlon.data[source != "kubernetes"]
+kubernetes.test <- nlon.data[source == "kubernetes"]
+kubernetes.model <- NLoN::NLoNModel(kubernetes.train$text, kubernetes.train$rater2)
+kubernetes.resp <- NLoN::NLoNPredict(kubernetes.model, kubernetes.test$text,
+                                  type="response")
+kubernetes.predict <- NLoN::NLoNPredict(kubernetes.model, kubernetes.test$text)
+ModelMetrics::auc(kubernetes.test$rater2, kubernetes.resp)
+table(kubernetes.predict, kubernetes.test$rater2)
+```
+
+```{r}
+lucene.train <- nlon.data[source != "lucene"]
+lucene.test <- nlon.data[source == "lucene"]
+lucene.model <- NLoN::NLoNModel(lucene.train$text, lucene.train$rater2)
+lucene.resp <- NLoN::NLoNPredict(lucene.model, lucene.test$text,
+                                  type="response")
+lucene.predict <- NLoN::NLoNPredict(lucene.model, lucene.test$text)
+ModelMetrics::auc(lucene.test$rater2, lucene.resp)
+table(lucene.predict, lucene.test$rater2)
+```

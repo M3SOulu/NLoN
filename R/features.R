@@ -101,7 +101,7 @@ Character3Grams <- function(text) {
   }
   it <- text2vec::itoken(text, tokenizer=Tokenizer,
                          preprocessor=Preprocessor,
-                         progressbar=TRUE)
+                         progressbar=FALSE)
   vocab <- text2vec::create_vocabulary(it)
   vectorizer <- text2vec::vocab_vectorizer(vocab)
   text2vec::create_dtm(it, vectorizer)
