@@ -29,7 +29,7 @@ Text Analysis Pipeline". The dataset is presented as a *data.table*
 object with different columns:
 
 * *source* is a character string containing the source of the line of
-  text (*mozilla*, *kubertenes*, and *lucene*).
+  text (*mozilla*, *kubernetes*, and *lucene*).
 * text is a character string containing the line of text
 * rater1 and rater2 are the factor (with levels *NL* for natural
   language and *Not* for anything else than natural language) with the
@@ -73,7 +73,7 @@ A model can be trained using *NLoN::NLoNModel*. A model can simply be
 trained by providing the text and expected response (a factor with
 levels *NL* and *Not*).
 
-```{r}
+```{r, message='hide', fig.width=7, fig.height=4}
 model <- NLoN::NLoNModel(nlon.data$text, nlon.data$rater2)
 plot(model)
 ```
@@ -99,7 +99,7 @@ used and a single model is trained on the whole dataset.
 
 For example we can build a model without using character tri-grams:
 
-```{r}
+```{r, fig.width=7, fig.height=4}
 model2 <- NLoN::NLoNModel(nlon.data$text, nlon.data$rater2,
                           features=FeatureExtraction)
 plot(model2)
@@ -108,7 +108,7 @@ plot(model2)
 Or build one using only the ratio of uppercase letters, numbers
 and special characters and a cross-validation repeated 5 times:
 
-```{r}
+```{r, fig.width=7, fig.height=4}
 features <- list(caps.ratio=NLoN::features$CapsRatio,
                  numbers.ratio=NLoN::features$NumbersRatio,
                  special.ratio=NLoN::features$SpecialCharsRatio)
@@ -153,18 +153,104 @@ validation only the first time, save the value of *lambda.min* and
 train the model without cross validation for future use.
 
 For example we trained a full model with a 10 repeated 10 fold cross
-validation, which takes X seconds to complete. We obtained a
+validation, which takes 1850 seconds to complete. We obtained a
 *lambda.min* value of 0.003448735. We can now train a model on the
 full training set in a very short time and directly used the lambda
 value previously obtained with cross validation:
 
 ```{r}
-lambda.min <- 0.003448735
+lambda.min <- 0.003784982
 system.time(model4 <- NLoN::NLoNModel(nlon.data$text, nlon.data$rater2,
                                       cv="none"))
 NLoN::NLoNPredict(model4, text, lambda=lambda.min)
 ```
 
-## Comparing models
+## Evaluating models
 
-TODO
+### All sources
+
+The first model trained on all sources with cross validation using
+both 3-grams and feature engineering has the following AUC at
+*lambda.min*:
+
+```{r}
+with(model, cvm[lambda == lambda.min])
+```
+
+And the following AUC at *lambda.1se*:
+
+```{r}
+with(model, cvm[lambda == lambda.1se])
+```
+
+### Within-source prediction
+
+Here we train one model for each source.
+
+### Mozilla
+
+```{r, fig.width=7, fig.height=4}
+comments.model <- NLoN::NLoNModel(nlon.data[source == "mozilla", text],
+                                  nlon.data[source == "mozilla", rater2])
+plot(comments.model)
+with(comments.model, cvm[lambda == lambda.min])
+with(comments.model, cvm[lambda == lambda.1se])
+```
+
+### Lucene
+
+```{r, fig.width=7, fig.height=4}
+emails.model <- NLoN::NLoNModel(nlon.data[source == "mozilla", text],
+                                  nlon.data[source == "mozilla", rater2])
+plot(emails.model)
+with(emails.model, cvm[lambda == lambda.min])
+with(emails.model, cvm[lambda == lambda.1se])
+```
+
+### Kubernetes
+
+```{r, fig.width=7, fig.height=4}
+chats.model <- NLoN::NLoNModel(nlon.data[source == "mozilla", text],
+                                  nlon.data[source == "mozilla", rater2])
+plot(chats.model)
+with(chats.model, cvm[lambda == lambda.min])
+with(chats.model, cvm[lambda == lambda.1se])
+```
+
+### Cross-source prediction
+
+Here we test how well a single source can be predicted using the two
+other data sources to train a model.
+
+```{r}
+mozilla.train <- nlon.data[source != "mozilla"]
+mozilla.test <- nlon.data[source == "mozilla"]
+mozilla.model <- NLoN::NLoNModel(mozilla.train$text, mozilla.train$rater2)
+mozilla.resp <- NLoN::NLoNPredict(mozilla.model, mozilla.test$text,
+                                  type="response")
+mozilla.predict <- NLoN::NLoNPredict(mozilla.model, mozilla.test$text)
+ModelMetrics::auc(mozilla.test$rater2, mozilla.resp)
+table(mozilla.predict, mozilla.test$rater2)
+```
+
+```{r}
+kubernetes.train <- nlon.data[source != "kubernetes"]
+kubernetes.test <- nlon.data[source == "kubernetes"]
+kubernetes.model <- NLoN::NLoNModel(kubernetes.train$text, kubernetes.train$rater2)
+kubernetes.resp <- NLoN::NLoNPredict(kubernetes.model, kubernetes.test$text,
+                                  type="response")
+kubernetes.predict <- NLoN::NLoNPredict(kubernetes.model, kubernetes.test$text)
+ModelMetrics::auc(kubernetes.test$rater2, kubernetes.resp)
+table(kubernetes.predict, kubernetes.test$rater2)
+```
+
+```{r}
+lucene.train <- nlon.data[source != "lucene"]
+lucene.test <- nlon.data[source == "lucene"]
+lucene.model <- NLoN::NLoNModel(lucene.train$text, lucene.train$rater2)
+lucene.resp <- NLoN::NLoNPredict(lucene.model, lucene.test$text,
+                                  type="response")
+lucene.predict <- NLoN::NLoNPredict(lucene.model, lucene.test$text)
+ModelMetrics::auc(lucene.test$rater2, lucene.resp)
+table(lucene.predict, lucene.test$rater2)
+```
