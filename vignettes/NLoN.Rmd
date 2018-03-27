@@ -23,10 +23,11 @@ this package, and how to evaluate its performance.
 
 ## Data preparation
 
-This paper includes the training dataset that was used in our MSR paper
-"Natural Language or Not (NLoN) - A Package for Software Engineering
-Text Analysis Pipeline" <https://arxiv.org/abs/1803.07292>. 
-The dataset is presented as a *data.table* object with different columns:
+This paper includes the training dataset that was used in our MSR
+paper "Natural Language or Not (NLoN) - A Package for Software
+Engineering Text Analysis
+Pipeline" <https://arxiv.org/abs/1803.07292>. The dataset is presented
+as a *data.table* object with different columns:
 
 * *source* is a character string containing the source of the line of
   text (*mozilla*, *kubernetes*, and *lucene*).
@@ -152,11 +153,11 @@ particularly slow. Thus it can be a good idea to run the cross
 validation only the first time, save the value of *lambda.min* and
 train the model without cross validation for future use.
 
-For example we trained a full model with a 10 repeated 10 fold cross
-validation, which takes 1850 seconds to complete. We obtained a
-*lambda.min* value of 0.003448735. We can now train a model on the
-full training set in a very short time and directly used the lambda
-value previously obtained with cross validation:
+For example we trained with *caret* a full model with a 10 repeated 10
+fold cross validation, which takes 1850 seconds to complete. We
+obtained a *lambda.min* value of 0.003448735. We can now train a model
+on the full training set in a very short time and directly used the
+lambda value previously obtained with cross validation:
 
 ```{r}
 lambda.min <- 0.003784982
