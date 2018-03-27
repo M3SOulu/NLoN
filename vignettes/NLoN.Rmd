@@ -25,8 +25,8 @@ this package, and how to evaluate its performance.
 
 This paper includes the training dataset that was used in our MSR paper
 "Natural Language or Not (NLoN) - A Package for Software Engineering
-Text Analysis Pipeline". The dataset is presented as a *data.table*
-object with different columns:
+Text Analysis Pipeline" <https://arxiv.org/abs/1803.07292>. 
+The dataset is presented as a *data.table* object with different columns:
 
 * *source* is a character string containing the source of the line of
   text (*mozilla*, *kubernetes*, and *lucene*).
@@ -42,7 +42,7 @@ library(NLoN)
 nlon.data
 ```
 
-However, in order to train a model, only a vector with the text and a
+In order to train a model, only a vector with the text and a
 vector (of the same length) with the factor response are needed. A
 source vector was added in order to identify where does each line of
 text provided in the package come from.
