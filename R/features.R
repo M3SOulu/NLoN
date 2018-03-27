@@ -36,7 +36,10 @@ ComputeFeatures <- function(text, features) {
     if (is.null(names(features))) {
       warning("features is a list of functions without names")
     }
-    data <- sapply(features, function(f) f(text))
+    res <- sapply(features, function(f) f(text))
+    if (length(text) == 1) {
+      t(as.matrix(res))
+    } else res
   } else stop("features must be a function or a list of functions")
 }
 
@@ -181,7 +184,12 @@ features <- modules::module({
   Stopwords <- function(text, Tokenize=Tokenize, stopwords=mysql.stopwords) {
     ## Computes the number of stopwords present in text based on a given
     ## Tokenize function
-    sapply(Tokenize(text), function(words) sum(words %in% stopwords))
+    if (length(text) == 1) {
+      tokenized <- list(Tokenize(text))
+    } else {
+      tokenized <- Tokenize(text)
+    }
+    sapply(tokenized, function(words) sum(words %in% stopwords))
   }
 
   Caps <- function(text) {
