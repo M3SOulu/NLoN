@@ -93,7 +93,18 @@ test_that("StartWithAt works", {
 
 test_that("FeatureExtraction works", {
   text <- c("", "abc", "123", "!@#")
-  expect_equal(names(FeatureExtraction(text)),
+  features <- FeatureExtraction(text)
+  expect_true(is.data.table(features))
+  expect_equal(nrow(features), 4)
+  expect_equal(colnames(features),
+               c("ratio.caps", "ratio.specials", "ratio.numbers",
+                 "length.words", "stopwords", "stopwords2",
+                 "last.char.code", "last.char.nl",
+                 "first.3.chars.letters", "emoticons", "first.char.at"))
+  features <- FeatureExtraction(text[1])
+  expect_true(is.data.table(features))
+  expect_equal(nrow(features), 1)
+  expect_equal(colnames(features),
                c("ratio.caps", "ratio.specials", "ratio.numbers",
                  "length.words", "stopwords", "stopwords2",
                  "last.char.code", "last.char.nl",
