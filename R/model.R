@@ -81,12 +81,10 @@ NLoNPredict <- function(model, text, lambda="lambda.min", type="class",
     model <- model$glmnet.fit
   }
   data <- ConvertFeatures(ComputeFeatures(text, features))
-  missing <- setdiff(rownames(model$beta), colnames(data))
-  if (length(missing)) {
-    data <- cbind(Matrix::sparseMatrix(i=c(), j=c(),
-                                       dims=c(nrow(data), length(missing)),
-                                       dimnames=list(NULL, missing)), data)
-  }
-  data <- data[, rownames(model$beta)]
+  missing.cols <- setdiff(rownames(model$beta), colnames(data))
+  data <- cbind(Matrix::sparseMatrix(i=c(), j=c(),
+                                     dims=c(nrow(data), length(missing.cols)),
+                                     dimnames=list(NULL, missing.cols)), data)
+  data <- rbind(data[, rownames(model$beta)], c())
   predict(model, data, s=lambda, type=type)
 }
