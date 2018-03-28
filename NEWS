@@ -1,8 +1,9 @@
-NLoN v0.2.0 (2017/03/27)
+NLoN v0.2.0 (2017/03/28)
 ========================
 
 * Adds a vignette.
-* Bugfix when computing features on text input of length 1.
+* Bugfix when computing features and making prediction on text input
+  of length 1.
 
 NLoN v0.1.0 (2017/03/09)
 ========================
