@@ -16,14 +16,14 @@ knitr::opts_chunk$set(
 )
 ```
 
-This vignette presents how one can train a model with NLoN and use to
-predict whether lines of text are natural language or not. It also
+This vignette presents how one can train a model with NLoN and use it
+to predict whether lines of text are natural language or not. It also
 shows how to use a different training dataset than the one provided in
 this package, and how to evaluate its performance.
 
 ## Data preparation
 
-This paper includes the training dataset that was used in our MSR
+This package includes the training dataset that was used in our MSR
 paper "Natural Language or Not (NLoN) - A Package for Software
 Engineering Text Analysis
 Pipeline" <https://arxiv.org/abs/1803.07292>. The dataset is presented
