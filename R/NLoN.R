@@ -22,5 +22,6 @@
 #' @docType package
 #' @name NLoN
 #' @import data.table
+#' @import glmnet
 #' @importFrom stats predict
 NULL
