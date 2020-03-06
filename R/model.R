@@ -34,6 +34,16 @@ NLoNModel <- function(text, response, features=TriGramsAndFeatures,
   }
 }
 
+#' Default NLoN Model.
+#'
+#' Train \code{NLoN} model with default data.
+#'
+#' @return \code{NLoN} model.
+#' @export
+DefaultNLoNModel <- function() {
+  with(NLoN::nlon.data, NLoNModel(text, rater2))
+}
+
 NLoNCaret <- function(data, response, lambdas, repeats, verbose, ...) {
   Summary <- function (data, lev=NULL, model=NULL) {
     c(F1=caret::F_meas(data$pred, data$obs, lev[1]),
