@@ -1,11 +1,11 @@
-NLoN v0.2.0 (2017/03/28)
+NLoN v0.2.0 (2018/03/28)
 ========================
 
 * Adds a vignette.
 * Bugfix when computing features and making prediction on text input
   of length 1.
 
-NLoN v0.1.0 (2017/03/09)
+NLoN v0.1.0 (2018/03/09)
 ========================
 
 First public version of NLoN.
