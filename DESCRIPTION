@@ -8,7 +8,9 @@ Author: Mika Mäntylä <mika.mantyla@oulu.fi>,
         Maëlick Claes <himself@maelick.net>
 Maintainer: Maëlick Claes <himself@maelick.net>
 Description: Identify whether text lines are natural language or not
-             using machine learning.
+             using machine learning. The training data included is
+             for software engineering domain (issue trackers, chat
+             conversations and mailing lists).
 Depends: data.table, R (>= 3.0)
 Imports: text2vec, tokenizers, glmnet, Matrix, modules, stats, caret
 Suggests: testthat, plyr, roxygen2, devtools, knitr, rmarkdown,

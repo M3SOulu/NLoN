@@ -6,7 +6,7 @@
 #'
 #' @examples
 #'
-#' ## Training data provided in the package.
+#' ## Training data provided in the package for software engineering domain
 #' nlon.data
 #'
 #' ## Build a model with glmnet
