@@ -25,7 +25,4 @@ vignettes/*.pdf
 *.knit.md
 inst/doc
 
-man
-NAMESPACE
-
 __pycache__
