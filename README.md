@@ -1,6 +1,8 @@
-[![Build Status](https://travis-ci.org/M3SOulu/NLoN.svg?branch=master)](https://travis-ci.org/M3SOulu/NLoN)
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/M3SOulu/NLoN/workflows/R-CMD-check/badge.svg)](https://github.com/M3SOulu/NLoN/actions)
 [![Coverage Status](https://img.shields.io/codecov/c/github/M3SOulu/NLoN/master.svg)](https://codecov.io/github/M3SOulu/NLoN?branch=master)
 <!-- [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/NLoN)](https://cran.r-project.org/package=NLoN) -->
+<!-- badges: end -->
 
 # NLoN - Natural Language or Not
 
