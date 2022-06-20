@@ -19,5 +19,5 @@ LazyData: true
 License: GPL-3
 Encoding: UTF-8
 Remotes: M3SOulu/NLoN
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.2
 VignetteBuilder: knitr

@@ -6,6 +6,7 @@
 #'
 #' @format A data frame with 6000 rows and 4 columns:
 #' \describe{
+#'   \item{id}{unique id.}
 #'   \item{source}{source from the text (mozilla, kubernetes or lucene).}
 #'   \item{text}{line of text.}
 #'   \item{rater1}{reponse from the first rater.}
