@@ -89,16 +89,17 @@ numerical values or a list of numerical vectors of the same
 length. Alternatively, features can also be a list of functions
 returning individual numeric vectors.
 
-The cross validation can also be customized. By default it uses *glmnet*
-as it is faster, but *caret* can also be used to run a repeated
-10-fold cross validation. This is done by changing the *cv* to
-*"caret"*. The number of repeats is 10 by default but can be changed
-with the parameter *repeats*. (Note that cross validation with *caret*
-is significantly slower than with *glmnet*.) Finally if a value different than
-*"caret"* or *"glmnet"* is passed to *cv*, then no cross validation is
-used and a single model is trained on the whole dataset.
+The cross validation can also be customized. By default, the package
+uses *caret* to run a repeated 10-fold cross validation. However, it
+is possible to use *glmnet* instead, by changing the *cv* argument to
+*"caret"*, to conduct a single 10-fold cross validation as done in the
+original paper. The number of repeats is 10 by default but can be
+changed with the parameter *repeats*. Finally if a value different
+than *"caret"* or *"glmnet"* is passed to *cv*, then no cross
+validation is used and a single model is trained on the whole dataset.
 
-For example we can build a model without using character tri-grams:
+For example we can build a model validated with *caret* without using
+character tri-grams as such:
 
 ```{r, fig.width=7, fig.height=4}
 model2 <- NLoN::NLoNModel(nlon.data$text, nlon.data$rater2,
