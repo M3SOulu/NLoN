@@ -12,11 +12,11 @@ nlon.data <- rbindlist(lapply(names(filenames), function(x) {
   if (x == "lucene") {
     res[, Text := gsub("^[>|\\s]+", "", Text, perl=TRUE)]
   }
-  res <- res[, list(source=x, text=Text,
+  res <- res[, list(id=ID, source=x, text=Text,
                     rater1=MakeFactor(Mika),
                     rater2=MakeFactor(Fabio))]
   fwrite(res, sprintf("data-raw/%s.csv", x))
   res
 }))
 
-devtools::use_data(nlon.data, overwrite=TRUE)
+usethis::use_data(nlon.data, overwrite=TRUE)
